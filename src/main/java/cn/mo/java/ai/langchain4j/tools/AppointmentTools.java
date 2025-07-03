@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * @author mo
  * @Description 挂号预约记录表封装成 tool
@@ -21,8 +23,8 @@ public class AppointmentTools {
     @Autowired
     private AppointmentService appointmentService;
 
-
-    @Tool(name = "查询是否有挂号号源", value = "根据科室名称、日期、时间查询是否有号源，并返回给用户")
+    // langchain4j 的测试模型，function.name 只能数字字母下划线-
+    @Tool(name = "checkAreThereAnyNumberSource", value = "根据科室名称、日期、时间查询是否有号源，并返回给用户")
     public boolean checkAreThereAnyNumberSource(
             @P(value = "科室名称") String department,
             @P(value = "日期") String date,
@@ -36,14 +38,18 @@ public class AppointmentTools {
         return count <= 0;
     }
 
-    @Tool(name = "预约挂号", value = "根据参数，先执行工具方法queryDepartment查询是否可预约，并直接给用户回答是否可预约，并让用户确认所有预约信息，用户确认后再进行预约。")
+    @Tool(name = "bookAppointment", value = "根据参数，先执行工具方法checkAreThereAnyNumberSource查询是否可预约，并直接给用户回答是否可预约，并让用户确认所有预约信息，用户确认后再进行预约。")
     public String bookAppointment(Appointment appointment) {
+        log.info("预约信息：{}", appointment);
         //查找数据库中是否包含对应的预约记录
         boolean anyNumberSource = checkAreThereAnyNumberSource(appointment.getDepartment(), appointment.getDate(), appointment.getTime());
         if (!anyNumberSource) {
             return "您选择的科室、日期、时间没有号源，请重新选择";
         } else {
-            appointment.setId(null);//防止大模型幻觉设置了id
+            appointment.setId(null);// 防止大模型幻觉设置了id
+            Date now = new Date();
+            appointment.setCreateTime(now);
+            appointment.setUpdateTime(now);
             boolean save = appointmentService.save(appointment);
             if (save) {
                 return "预约成功，并返回预约详情";
@@ -53,8 +59,9 @@ public class AppointmentTools {
         }
     }
 
-    @Tool(name = "取消预约挂号", value = "根据参数，查询预约是否存在，如果存在则删除预约记录并返回取消预约成功，否则返回取消预约失败")
+    @Tool(name = "cancelAppointment", value = "根据参数，查询预约是否存在，如果存在则删除预约记录并返回取消预约成功，否则返回取消预约失败")
     public String cancelAppointment(Appointment appointment) {
+        log.info("取消预约信息：{}", appointment);
         boolean anyNumberSource = checkAreThereAnyNumberSource(appointment.getDepartment(), appointment.getDate(), appointment.getTime());
         if (!anyNumberSource) {
             return "您没有预约记录，请核对预约科室和时间";

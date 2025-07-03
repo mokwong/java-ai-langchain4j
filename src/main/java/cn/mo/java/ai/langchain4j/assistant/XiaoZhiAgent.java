@@ -12,7 +12,7 @@ import static dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;
  * @Description 小智医疗客服
  * @createTime 2025年07月03日 14:26
  */
-@AiService(wiringMode = EXPLICIT, chatModel = "openAiChatModel", chatMemoryProvider = "xiaoZhiChatMemoryProvider")
+@AiService(wiringMode = EXPLICIT, chatModel = "openAiChatModel", chatMemoryProvider = "xiaoZhiChatMemoryProvider", tools = {"appointmentTools"})
 public interface XiaoZhiAgent {
 
     @SystemMessage(fromResource = "xiao-zhi-system-prompt-template.txt")

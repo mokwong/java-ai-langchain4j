@@ -2,6 +2,7 @@ package cn.mo.java.ai.langchain4j.mysql.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Date;
@@ -70,10 +71,12 @@ public class Appointment {
     /**
      * 创建时间
      */
+    @JsonIgnore // Date 类型，大模型的回答无法反序列出 Date 对象，所以这里忽略
     private Date createTime;
 
     /**
      * 最近修改时间
      */
+    @JsonIgnore
     private Date updateTime;
 }
