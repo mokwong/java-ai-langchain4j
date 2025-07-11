@@ -28,7 +28,8 @@ public class XiaoZhiController {
     private XiaoZhiAgent xiaoZhiAgent;
 
     @Operation(summary = "对话")
-    @PostMapping(value = "/chat", produces= "text/stream;charset=utf-8")
+    @PostMapping(value = "/chat", produces = "text/html;charset=utf-8")
+//    @PostMapping(value = "/chat", produces = "text/stream;charset=utf-8")
 //    @PostMapping(value = "/chat", produces= "text/event-stream;charset=utf-8")
     public Flux<String> chat(@RequestBody ChatForm chatForm) {
         String sessionId = WebSessionIdHolder.getSessionId();
