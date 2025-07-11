@@ -4,6 +4,8 @@ import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.rag.query.Query;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
@@ -56,6 +58,7 @@ public class EmbeddingTest {
 
     /**
      * Pinecone-相似度匹配
+     * 其实就是 {@link EmbeddingStoreContentRetriever#retrieve(Query)} 的实现
      */
     @Test
     public void embeddingSearch() {
