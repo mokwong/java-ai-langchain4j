@@ -84,6 +84,18 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!--解析各种文档-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-apache-tika</artifactId>
+        </dependency>
+
+        <!--简单的rag实现-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-easy-rag</artifactId>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
