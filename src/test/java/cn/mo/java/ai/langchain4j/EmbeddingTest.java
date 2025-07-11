@@ -3,7 +3,6 @@ package cn.mo.java.ai.langchain4j;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModelFactory;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
@@ -21,8 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class EmbeddingTest {
 
-    // 不申请 api 了，使用内置的向量模型验证一下吧
-    private EmbeddingModel embeddingModel = new BgeSmallEnV15QuantizedEmbeddingModelFactory().create();
+    @Autowired
+    private EmbeddingModel embeddingModel;
+
+    @Autowired
+    private EmbeddingStore<TextSegment> embeddingStore;
 
     @Test
     public void testEmbeddingModel() {
@@ -31,9 +33,6 @@ public class EmbeddingTest {
         System.out.println("向量维度：" + embed.content().dimension());
         System.out.println("向量输出：" + embed);
     }
-
-    @Autowired
-    private EmbeddingStore embeddingStore;
 
     /**
      * 将文本转换成向量，然后存储到内存中

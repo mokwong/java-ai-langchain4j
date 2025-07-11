@@ -6,8 +6,10 @@ import dev.langchain4j.data.document.loader.ClassPathDocumentLoader;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +52,10 @@ public class XiaoZhiChatAssistantConfig {
      * 用户每次聊天，都会进行检索，而且检索出来的内容其实没什么价值
      * 可以设置一个 minScore，比如 0.8，相似度大于这个值的内容，才会被检索返回
      * {
-     *     "role" : "user",
-     *     "content" : "我有点头疼，怎么办\n\nAnswer using the following information:\n出贡献中青年专家”荣誉称号。\n\n　　科室现有医生 57人，其中教授11人、副教授17人、主治医生18人、住院医生11人，其中博士生导师7人，硕士生导师8人。现有各级护理人员50人。科室重视人才培养，老一辈知名专家老当益壮，中青年专家年富力强，年轻医师迅速成长。90%的高级教师有在国外学习和进修的经历。现任科室主任崔丽英教授担任现任中华医学会神经病学分会主任委员（第七届）及《中华神经科杂志》主编，并曾担任中华医学会神经病学分会第四届主任委员，科室20人次在中华医学会各专业学组任职，10余人担任多家国内核心期刊杂志副主编及编委。\n\n## 科室地址\n\n东院门诊：东院门诊楼6层。\n\n## 专家团队\n\n### 彭斌\n\n副院长 主任医师 教授 博士研究生导师 Professor\n\n详细介绍\n朱以诚，女，主任医师，教授，神经内科主任，神经病学系主任，博士研究生导师。"
-     *   }
+     * "role" : "user",
+     * "content" : "我有点头疼，怎么办\n\nAnswer using the following information:\n出贡献中青年专家”荣誉称号。\n\n　　科室现有医生 57人，其中教授11人、副教授17人、主治医生18人、住院医生11人，其中博士生导师7人，硕士生导师8人。现有各级护理人员50人。科室重视人才培养，老一辈知名专家老当益壮，中青年专家年富力强，年轻医师迅速成长。90%的高级教师有在国外学习和进修的经历。现任科室主任崔丽英教授担任现任中华医学会神经病学分会主任委员（第七届）及《中华神经科杂志》主编，并曾担任中华医学会神经病学分会第四届主任委员，科室20人次在中华医学会各专业学组任职，10余人担任多家国内核心期刊杂志副主编及编委。\n\n## 科室地址\n\n东院门诊：东院门诊楼6层。\n\n## 专家团队\n\n### 彭斌\n\n副院长 主任医师 教授 博士研究生导师 Professor\n\n详细介绍\n朱以诚，女，主任医师，教授，神经内科主任，神经病学系主任，博士研究生导师。"
+     * }
+     *
      * @return
      */
     @Bean
@@ -69,6 +72,23 @@ public class XiaoZhiChatAssistantConfig {
         EmbeddingStoreIngestor.ingest(documents, embeddingStore);
         // 从嵌入存储（EmbeddingStore）里检索和查询内容相关的信息
         return EmbeddingStoreContentRetriever.from(embeddingStore);
+    }
+
+    @Bean
+    public ContentRetriever contentRetrieverXiaozhiPincone(EmbeddingModel embeddingModel, EmbeddingStore<TextSegment> embeddingStore) {
+        // 创建一个 EmbeddingStoreContentRetriever 对象， 用于从嵌入存储中检索内容
+        return EmbeddingStoreContentRetriever
+                .builder()
+                // 设置用于生成嵌入向量的嵌入模型
+                .embeddingModel(embeddingModel)
+                // 指定要使用的嵌入存储
+                .embeddingStore(embeddingStore)
+                // 设置最大检索结果数量， 这里表示最多返回 1 条匹配结果
+                .maxResults(1)
+                // 设置最小得分阈值， 只有得分大于等于 0.8 的结果才会被返回
+                .minScore(0.8)
+                // 构建最终的 EmbeddingStoreContentRetriever 实例
+                .build();
     }
 
 }
