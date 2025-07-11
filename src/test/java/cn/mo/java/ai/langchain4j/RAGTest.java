@@ -95,6 +95,9 @@ public class RAGTest {
          * @see RecursiveDocumentSplitterFactory#create()
          */
         // 2、文本向量化：使用一个 LangChain4j 内置的轻量化向量模型对每个文本片段进行向量化
+        /**
+         * @see EmbeddingStoreIngestor#EmbeddingStoreIngestor(dev.langchain4j.data.document.DocumentTransformer, dev.langchain4j.data.document.DocumentSplitter, dev.langchain4j.data.segment.TextSegmentTransformer, dev.langchain4j.model.embedding.EmbeddingModel, dev.langchain4j.store.embedding.EmbeddingStore)
+         */
         // 3、将原始文本和向量存储到向量数据库中(InMemoryEmbeddingStore)
         EmbeddingStoreIngestor.ingest(document, embeddingStore);
         // 查看向量数据库内容，每一个文本块，都转换成一系列的向量
