@@ -1,6 +1,6 @@
 package cn.mo.java.ai.langchain4j;
 
-import dev.langchain4j.community.model.dashscope.QwenTokenizer;
+import dev.langchain4j.community.model.dashscope.QwenTokenCountEstimator;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.ClassPathDocumentLoader;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
@@ -10,7 +10,7 @@ import dev.langchain4j.data.document.splitter.DocumentByParagraphSplitter;
 import dev.langchain4j.data.document.splitter.recursive.RecursiveDocumentSplitterFactory;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.onnx.HuggingFaceTokenizer;
+import dev.langchain4j.model.embedding.onnx.HuggingFaceTokenCountEstimator;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import org.junit.jupiter.api.Test;
@@ -121,7 +121,7 @@ public class RAGTest {
                 300,
                 30,
                 // token分词器：按token计算
-                new HuggingFaceTokenizer());
+                new HuggingFaceTokenCountEstimator());
         // 按字符计算，每个片段包含不超过 300个字符，并且有 30个字符的重叠部分保证连贯性
         DocumentByParagraphSplitter documentSplitter2 = new DocumentByParagraphSplitter(300, 30);
         EmbeddingStoreIngestor
@@ -144,7 +144,7 @@ public class RAGTest {
      */
     @Test
     public void testTokenize() {
-        HuggingFaceTokenizer huggingFaceTokenizer = new HuggingFaceTokenizer();
+        HuggingFaceTokenCountEstimator huggingFaceTokenizer = new HuggingFaceTokenCountEstimator();
         // 要 debug 进去，才能看到分词结果，但是里面的结果我看不懂，有些文字会转换为模型可以理解的特殊标记
         int i = huggingFaceTokenizer.estimateTokenCountInText("我叫小张，我今年18岁，我住在上海");
         System.out.println(i);
@@ -155,8 +155,8 @@ public class RAGTest {
         String text = "这是一个示例文本，用于测试 token 长度的计算。";
         UserMessage userMessage = UserMessage.userMessage(text);
         // 计算 token 长度
-//         QwenTokenizer tokenizer = new QwenTokenizer(System.getenv("DASH_SCOPE_API_KEY"), "qwen-max");
-        HuggingFaceTokenizer tokenizer = new HuggingFaceTokenizer();
+//         QwenTokenCountEstimator tokenizer = new QwenTokenCountEstimator(System.getenv("DASH_SCOPE_API_KEY"), "qwen-max");
+        HuggingFaceTokenCountEstimator tokenizer = new HuggingFaceTokenCountEstimator();
         int count = tokenizer.estimateTokenCountInMessage(userMessage);
         System.out.println("token长度：" + count);
     }

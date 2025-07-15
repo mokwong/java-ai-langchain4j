@@ -14,7 +14,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.2.6</spring-boot.version>
         <knife4j.version>4.3.0</knife4j.version>
-        <langchain4j.version>1.0.0-beta3</langchain4j.version>
+<!--        这是课程的版本-->
+<!--        <langchain4j.version>1.0.0-beta3</langchain4j.version>-->
+<!--        <langchain4j-community.version>1.0.0-beta3</langchain4j-community.version>-->
+<!--        这是新的release版本，妈的，一升版本，很多 API 都不一样了-->
+        <langchain4j.version>1.1.0</langchain4j.version>
+        <langchain4j-community.version>1.1.0-beta7</langchain4j-community.version>
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
     </properties>
 
@@ -132,7 +137,7 @@
             <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-community-bom</artifactId>
-                <version>${langchain4j.version}</version>
+                <version>${langchain4j-community.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

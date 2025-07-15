@@ -87,7 +87,7 @@ public class ChatMemoryTest {
         // 指定聊天记忆消息窗口
         Assistant assistant = AiServices
                 .builder(Assistant.class)
-                .chatLanguageModel(openAiChatModel)
+                .chatModel(openAiChatModel)
                 .chatMemory(chatMemory)
                 .build();
         String answer1 = assistant.chat("你好，我是马化腾");
